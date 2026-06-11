@@ -162,7 +162,7 @@ X96871.1
 ```
 The above line of code ensures <ins>no duplicated accession numbers</ins> are included in the `s2m_accession`.  
 
-Now,I can extract the accurate virus names from the NCBI database using the list of accession numbers above.  This is done by using a NCBI’s command line tools;  both `datasets and dataformat` are NCBI command line tools downloaded from https://www.ncbi.nlm.nih.gov/datasets/docs/v2/download-and-install/ and https://www.ncbi.nlm.nih.gov/datasets/docs/v2/command-line-tools/using-dataformat/ 
+Now,I can extract the accurate virus names from the NCBI database using the list of accession numbers above.  This is done by using a NCBI’s command line tools;  both `datasets and dataformat` are NCBI command line tools downloaded from **https://www.ncbi.nlm.nih.gov/datasets/docs/v2/download-and-install/** and **https://www.ncbi.nlm.nih.gov/datasets/docs/v2/command-line-tools/using-dataformat/** 
 
 Then, a following code extracts the accurate virus name corresponding the accession numbers:
 ```
@@ -220,9 +220,7 @@ The content of the `s2m_virus.tsv` is shown below:
 <sup>*</sup>supURS000080DEE1_32630 was an artificially created s2m sequence and thus not registered in NCBI virus database.
 
 There are a few issues that are immediately apparent, for instance, the same name virus with different accession numbers, and inconsistent/incomplete virus notations (variants/serotypes). These issues must be dealt with before going any further.  Since CLI is not the easiest place for manipulating `tsv` files, I used Apple’s `Numbers` (or your favorite spreadsheet editor) to make some changes in the `s2m_virus.tsv` as follows:
-
-![Screenshot 2026-05-18 at 1.39.47 PM.png](Screenshot%202026-05-18%20at%201.39.47%E2%80%AFPM.png)
-
+<img width="1103" height="759" alt="Screenshot 2026-05-18 at 1 39 47 PM" src="https://github.com/user-attachments/assets/54242192-4740-4ef1-b98f-052252023bd0" />
 As you can see, I added correct clade numeration for Human Astrovirus.  Also, I added variant notations to the `Pheasant coronavirus` (which I later decided to remove!!).
 
 Next, a file, `temp.txt` having genomic location of `s2m` corresponding the `accession` in the identical order was created as follows:
@@ -344,8 +342,7 @@ Library(Biostrings)
 s2m<-readRNAStringSet(filepath = "/Volumes/MySlateDrive/Astrovirus/output.mod.fa", format = "fasta", use.names = T)
 ```
 This step creates a `RNAstringset` object, `s2m` which looks as follows:
-![s2m.png](s2m.png)
-
+<img width="3316" height="2947" alt="s2m" src="https://github.com/user-attachments/assets/bf86ec97-bc09-451a-810b-2ae6cd4c1720" />
 I made a couple of modifications to `s2m`; 
 1. Accession, `Z25771.1` was deleted because this was the sequence for **"Human astrovirus type 1 genes for capsid protein and nonstructural protein”** but not virus. This was easily accomplished by `s2m.mini<-s2m[-40]`
 2. I found two sequence with accessions, `U15136.1` (row 33) and `X96871.1` (row 36) with shorter s2m length (38 and 39 respectively) that appear to be misaligned, off by 1 bp. I can almost guarantee that this 1bp misalignment by a Rfam sequence alignment algorithm.  Sometimes, automated curation is not perfect. Correction was made by following lines of code:
@@ -356,15 +353,14 @@ I made a couple of modifications to `s2m`;
    s2m.mini[36]<-as(X96871.1, "RNAStringSet")
    ```
 A resulting `s2m.mini` looks as follows;
-![s2m.mini.png](s2m.mini.png)
+<img width="3213" height="2801" alt="s2m mini" src="https://github.com/user-attachments/assets/25644145-f177-4925-8ce0-6453dbb1e655" />
 Clearly, sequence labels in the `s2m.mini` is ordered by `accession` but this probably is less meaningless than ordered by `virus name`.  Perhaps, it makes more sense to arrange the label according to the virus name alphabetically:
 ```
 names(s2m.mini) %>% str_replace(pattern = "(^\\S+.)(\\S.+)", replacement = "\\2") %>% str_order() >myorder
 BrowseSeqs(s2m.mini[myorder])
 ```
 A result of this script is following;
-![file12ea0638c0fa.png](file12ea0638c0fa.png)
-
+<img width="3170" height="2815" alt="s2m mini sorted" src="https://github.com/user-attachments/assets/5dacaadc-9624-4424-a11f-c9be115bfbed" />
 ### Figure 4
 This figure depicts sections of genomic sequence (converted to transcripts) among bat Astrovirus and emerging strains of human Astrovirus that correspond to the defined `s2m` sequence from reference human Astrovirus (Human Astrovirus 1). These bat Astrovirus strains were from the early reports of the zoonotic Astrovirus in the `NCBI Virus` database. 
 
@@ -391,7 +387,8 @@ AlignSeqs(s2m.comb, processor=18)->s2m.comb.alg
 subseq(s2m.comb.alg, start = 9920, end = 10040) %>% BrowseSeqs()
 ```
 This creates an image used as `Figure 4` in the manuscript. 
-![Fig4.png](Fig4.png)
+<img width="6398" height="849" alt="Fig4" src="https://github.com/user-attachments/assets/caf69e2c-5cb2-4cc2-aee7-648e5b314b03" />
+
 
 
 
